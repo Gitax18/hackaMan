@@ -12,14 +12,16 @@ export const useTheme = () => {
 };
 
 function ThemeContextProvider({ children }) {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState(localStorage.getItem("theme", "light"));
 
   function lightTheme() {
     setTheme("light");
+    localStorage.setItem("theme", "light");
   }
 
   function darkTheme() {
     setTheme("dark");
+    localStorage.setItem("theme", "dark");
   }
 
   useEffect(() => {
