@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Code, Icon, LogOut, Settings, SunMoon } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -98,6 +98,13 @@ function SidebarGroupSettings() {
 }
 
 function AppSidebar() {
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    navigate("/");
+  }
+
   return (
     <Sidebar className="border-r-0">
       <SidebarHeader>
@@ -112,7 +119,7 @@ function AppSidebar() {
         <hr className="border-2 border-gray-400 rounded-2xl" />
         <SidebarMenu className="flex items-center justify-center">
           <SidebarMenuItem>
-            <SidebarMenuButton>
+            <SidebarMenuButton onClick={handleLogout}>
               <LogOut size={16} />
               <span>Logout</span>
             </SidebarMenuButton>
