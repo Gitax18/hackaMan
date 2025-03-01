@@ -6,10 +6,30 @@ import { RouterProvider } from "react-router";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import AllContextsProvider from "./context/AllContextsProvider";
+import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./pages/SignUpPage";
+import RefreshHandler from "./components/authorization/RefreshHandler";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    children: [
+      {
+        path: "",
+        element: <RefreshHandler />,
+      },
+      {
+        path: "login",
+        element: <LoginPage />,
+      },
+      {
+        path: "signup",
+        element: <SignUpPage />,
+      },
+    ],
+  },
+  {
+    path: "/app",
     element: <MainLayout />,
     children: [
       {
@@ -23,7 +43,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AllContextsProvider>
-      <RouterProvider router={router} />
+      <RouterProvider router={router}>
+        <RefreshHandler />
+      </RouterProvider>
     </AllContextsProvider>
   </StrictMode>
 );
