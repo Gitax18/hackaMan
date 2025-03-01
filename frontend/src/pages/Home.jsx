@@ -8,10 +8,19 @@ import {
 } from "@/components/ui/card";
 import { useHackathons } from "@/context/contexts/hackathonContextProvider";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function Home() {
   const { hackathons } = useHackathons();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/");
+    }
+  });
+
   return (
     <div className="w-full col-span-10 p-4">
       <h1 className="text-3xl font-bold mb-4 tracking-wide">Your Hackathons</h1>
