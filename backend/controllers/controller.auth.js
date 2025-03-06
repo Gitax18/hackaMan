@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../model/model.User");
+const jwt = require("jsonwebtoken");
 
 const {
   Message,
@@ -35,6 +36,42 @@ exports.postSignup = async function (req, res, next) {
       .json(Message("User Created Successfully, Now Please Login", true));
   } catch (error) {
     console.error("Error in Controller Signup: ", error);
+    return res.status(500).json(Error("Server Side Error", error, false));
+  }
+};
+
+exports.postLogin = async function (req, res, next) {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res
+        .status(403)
+        .json(Message("User does not exist, please signup", false));
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res
+        .status(403)
+        .json(Message("User does not exist, please signup", false));
+    }
+
+    const jwtToken = jwt.sign(
+      { id: user._id, name: user.name },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    return res
+      .status(201)
+      .json(
+        Success("Login Succeed", { token: jwtToken, name: user.name }, true)
+      );
+  } catch (error) {
+    console.error("Error in controller Login", error);
     return res.status(500).json(Error("Server Side Error", error, false));
   }
 };
