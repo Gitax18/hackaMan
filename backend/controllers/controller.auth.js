@@ -45,12 +45,14 @@ exports.postLogin = async function (req, res, next) {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
+    // if user email not matched then send error
     if (!user) {
       return res
         .status(403)
         .json(Message("User does not exist, please signup", false));
     }
 
+    // check if password match
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
@@ -59,6 +61,7 @@ exports.postLogin = async function (req, res, next) {
         .json(Message("User does not exist, please signup", false));
     }
 
+    // creating the jwt token
     const jwtToken = jwt.sign(
       { id: user._id, name: user.name },
       process.env.JWT_SECRET,
