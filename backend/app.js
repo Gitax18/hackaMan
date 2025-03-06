@@ -1,16 +1,23 @@
 // Core imports
 const express = require("express");
 require("dotenv").config();
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
 // Custom imports
 const connectDB = require("./db/connection");
 const AuthRoutes = require("./routes/route.auth");
 
 let app = express();
+app.use(cors());
 
 app.get("/", (req, res, next) => {
   res.send("Server is started");
 });
+
+// middlewares
+app.use(bodyParser.json());
+app.use("/auth", AuthRoutes);
 
 connectDB().then((res) => {
   console.log("Mongodb Connected successfully");
