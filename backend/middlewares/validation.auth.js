@@ -1,7 +1,7 @@
 const joi = require("joi");
 const { Error } = require("../responseStructure/responseStructures");
 
-exports.signupRegistration = function (req, res, next) {
+exports.signupValidation = function (req, res, next) {
   const schema = joi.object({
     name: joi.string().min(3).max(50).required(),
     email: joi.string().email().required(),
