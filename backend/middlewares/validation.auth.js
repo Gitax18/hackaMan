@@ -1,12 +1,12 @@
 const joi = require("joi");
-const { Error } = require("../responseStructure/responseStructures");
+const { Error } = require("../templates/responseStructures");
 
 exports.signupValidation = function (req, res, next) {
   const schema = joi.object({
     name: joi.string().min(3).max(50).required(),
     email: joi.string().email().required(),
     password: joi.string().min(8).required(),
-    org_uni: joi.string(),
+    uni_org: joi.string(),
   });
 
   const { error } = schema.validate(req.body);
