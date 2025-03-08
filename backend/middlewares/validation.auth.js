@@ -18,6 +18,21 @@ exports.signupValidation = function (req, res, next) {
   next();
 };
 
+exports.otpValidation = function (req, res, next) {
+  const schema = joi.object({
+    email: joi.string().email().required(),
+    otp: joi.number().min(100000).max(999999),
+  });
+
+  const { error } = schema.validate(req.body);
+
+  if (error) {
+    return res.status(400).json(Error("Bad Request", error, false));
+  }
+
+  next();
+};
+
 exports.loginValidation = function (req, res, next) {
   const schema = joi.object({
     email: joi.string().email().required(),
