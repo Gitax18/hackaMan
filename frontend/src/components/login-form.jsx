@@ -1,15 +1,19 @@
 /* eslint-disable react/prop-types */
-import { Computer } from "lucide-react";
+import { Computer, Eye, EyeClosedIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import { HandleError, HandleSuccess } from "@/lib/toasts";
+import { useState } from "react";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -17,6 +21,9 @@ const loginSchema = z.object({
 });
 
 export function LoginForm({ className, ...props }) {
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -26,7 +33,30 @@ export function LoginForm({ className, ...props }) {
   });
 
   function handleFormSubmit(data) {
-    console.log(data);
+    try {
+      axios
+        .post("/auth/login", data)
+        .then((res) => {
+          const data = res.data;
+          if (data.success) {
+            localStorage.setItem("token", data.data.token);
+            localStorage.setItem("name", data.data.name);
+            HandleSuccess(data.message);
+            setInterval(() => {
+              navigate("/");
+            }, 2000);
+          } else {
+            console.log(res);
+            HandleError("Unknown Error, Please check log in console");
+          }
+        })
+        .catch((err) => {
+          HandleError(err.response.data.message);
+        });
+    } catch (error) {
+      console.log("Error is ", error);
+      HandleError(error);
+    }
   }
 
   return (
@@ -68,12 +98,17 @@ export function LoginForm({ className, ...props }) {
             </div>
             <div className="grid gap-3">
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="....."
-                {...register("password")}
-              />
+              <div className="flex items-center gap-2">
+                <Input
+                  id="password"
+                  type={`${showPassword ? "text" : "password"}`}
+                  placeholder="....."
+                  {...register("password")}
+                />
+                <button onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <EyeClosedIcon /> : <Eye />}
+                </button>
+              </div>
               {errors.password && (
                 <div className="text-red-500 mb-0.5 -mt-1">
                   {errors.password.message}
@@ -86,6 +121,7 @@ export function LoginForm({ className, ...props }) {
           </div>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 }
