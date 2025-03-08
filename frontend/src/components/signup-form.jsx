@@ -13,10 +13,10 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 
 const signupSchema = z.object({
-  fullname: z.string().min(3),
+  name: z.string().min(3),
   email: z.string().email(),
   password: z.string().min(8),
-  organisation: z.string().min(1),
+  uni_org: z.string().min(1),
 });
 
 export function SignupForm({ className, ...props }) {
@@ -58,16 +58,16 @@ export function SignupForm({ className, ...props }) {
           </div>
           <div className="flex flex-col gap-6">
             <div className="grid gap-3">
-              <Label htmlFor="fullname">Fullname</Label>
+              <Label htmlFor="name">Fullname</Label>
               <Input
-                id="fullname"
-                type="fullname"
+                id="name"
+                type="name"
                 placeholder="john_doe"
-                {...register("fullname")}
+                {...register("name")}
               />
-              {errors.username && (
+              {errors.name && (
                 <div className="text-red-500 mb-0.5 -mt-1">
-                  {errors.username.message}
+                  {errors.name.message}
                 </div>
               )}
             </div>
@@ -105,23 +105,21 @@ export function SignupForm({ className, ...props }) {
               )}
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="organisation">
-                Select organisation/University{" "}
-              </Label>
+              <Label htmlFor="uni_org">University/Organisation </Label>
               <Input
                 id="org"
                 placeholder="Google / IITB"
                 type="text"
-                {...register("organisation")}
+                {...register("uni_org")}
               />{" "}
-              {errors.organisation && (
+              {errors.uni_org && (
                 <div className="text-red-500 mb-0.5 -mt-1">
-                  {errors.organisation.message}
+                  {errors.uni_org.message}
                 </div>
               )}
             </div>
             <Button type="submit" className="w-full">
-              Signup
+              Verify
             </Button>
           </div>
         </div>
