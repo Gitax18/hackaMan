@@ -16,7 +16,7 @@ const User = new Schema(
       type: String,
       required: true,
     },
-    org_uni: {
+    uni_org: {
       type: String,
       required: false,
     },
