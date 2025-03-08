@@ -7,10 +7,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+});
+
 export function LoginForm({ className, ...props }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+  function handleFormSubmit(data) {
+    console.log(data);
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form>
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
             <a
@@ -37,8 +58,13 @@ export function LoginForm({ className, ...props }) {
                 id="email"
                 type="email"
                 placeholder="m@example.com"
-                required
+                {...register("email")}
               />
+              {errors.email && (
+                <div className="text-red-500 mb-0.5 -mt-1">
+                  {errors.email.message}
+                </div>
+              )}
             </div>
             <div className="grid gap-3">
               <Label htmlFor="password">Password</Label>
@@ -46,8 +72,13 @@ export function LoginForm({ className, ...props }) {
                 id="password"
                 type="password"
                 placeholder="....."
-                required
+                {...register("password")}
               />
+              {errors.password && (
+                <div className="text-red-500 mb-0.5 -mt-1">
+                  {errors.password.message}
+                </div>
+              )}
             </div>
             <Button type="submit" className="w-full">
               Login
