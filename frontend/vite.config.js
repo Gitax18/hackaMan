@@ -5,11 +5,12 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  // server: {
-  //   proxy: {
-  //     "/": "http:localhost:3010",
-  //   },
-  // },
+  server: {
+    proxy: {
+      "/auth": "http://localhost:3010",
+      "/util": "http://localhost:3010",
+    },
+  },
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
