@@ -9,21 +9,25 @@ import {
 import { useHackathons } from "@/context/contexts/hackathonContextProvider";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Home() {
   const { hackathons } = useHackathons();
+  const [name, setName] = useState("User");
   const navigate = useNavigate();
 
   useEffect(() => {
+    setName(localStorage.getItem("name"));
     if (!localStorage.getItem("token")) {
       navigate("/");
     }
-  });
+  }, [setName, navigate]);
 
   return (
     <div className="w-full col-span-10 p-4">
-      <h1 className="text-3xl font-bold mb-4 tracking-wide">Your Hackathons</h1>
+      <h1 className="text-3xl font-bold mb-4 tracking-wide">
+        Welocome, {name.toUpperCase()}
+      </h1>
       <div className="grid items-center justify-center grid-cols-3 gap-y-4 gap-x-4 md:grid-cols-4 3xl:grid-cols-5 ">
         {hackathons.map((hackathon) => (
           <Card key={hackathon.id} className="w-[20rem]">
