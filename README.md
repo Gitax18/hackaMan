@@ -17,6 +17,8 @@
 
 # HackaMan - Your One-Stop Solution for Hackathon Project Management
 
+## 🚧Project Under Developement🚧
+
 Are you tired of managing multiple hackathon teams through WhatsApp groups or Discord? **HackaMan** is here to simplify your experience!
 
 **HackaMan** is a web-based application designed to help users efficiently manage their hackathon projects and teams. With features like:
