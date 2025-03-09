@@ -105,9 +105,9 @@ export function LoginForm({ className, ...props }) {
                   placeholder="....."
                   {...register("password")}
                 />
-                <button onClick={() => setShowPassword(!showPassword)}>
+                <span onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? <EyeClosedIcon /> : <Eye />}
-                </button>
+                </span>
               </div>
               {errors.password && (
                 <div className="text-red-500 mb-0.5 -mt-1">
