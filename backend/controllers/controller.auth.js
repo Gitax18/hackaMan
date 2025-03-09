@@ -24,6 +24,9 @@ exports.postSignup = async function (req, res, next) {
         .json(Error("User Exist", "User already exist, please login", false));
     }
 
+    //if user tries to signup multiple times without verifying otp
+    await OTPHandler.deleteMany({ email });
+
     const otp = createOtp();
     const expiresAt = new Date().getTime() + 3600000;
 
@@ -87,7 +90,22 @@ exports.postVerifyOTP = async (req, res) => {
 
       await user.save();
 
-      return res.status(201).json(Message("User created successfully", true));
+      // creating the jwt token
+      const jwtToken = jwt.sign(
+        { id: user._id, name: user.name },
+        process.env.JWT_SECRET,
+        { expiresIn: "24h" }
+      );
+
+      return res
+        .status(201)
+        .json(
+          Success(
+            "Account creating Succeed",
+            { token: jwtToken, name: user.name },
+            true
+          )
+        );
     } else {
       return res.status(400).json(Message("OTP is not valid", false));
     }
