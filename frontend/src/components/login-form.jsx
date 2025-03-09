@@ -42,7 +42,7 @@ export function LoginForm({ className, ...props }) {
             localStorage.setItem("token", data.data.token);
             localStorage.setItem("name", data.data.name);
             HandleSuccess(data.message);
-            setInterval(() => {
+            setTimeout(() => {
               navigate("/");
             }, 2000);
           } else {
