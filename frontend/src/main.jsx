@@ -9,6 +9,7 @@ import AllContextsProvider from "./context/AllContextsProvider";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import RefreshHandler from "./components/authorization/RefreshHandler";
+import OTPFormPage from "./pages/OTPFormPage";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "signup",
         element: <SignUpPage />,
+      },
+      {
+        path: "verifyotp",
+        element: <OTPFormPage />,
       },
     ],
   },
