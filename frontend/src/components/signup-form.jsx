@@ -5,12 +5,15 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import { HandleError, HandleSuccess } from "@/lib/toasts";
 
 const signupSchema = z.object({
   name: z.string().min(3),
@@ -21,17 +24,36 @@ const signupSchema = z.object({
 
 export function SignupForm({ className, ...props }) {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(signupSchema),
   });
 
   function handleFormSubmit(data) {
-    console.log(data);
+    try {
+      axios
+        .post("/auth/signup", data)
+        .then((response) => {
+          sessionStorage.setItem("email", data.email);
+          reset();
+          HandleSuccess(response.data.message + ", Redirecting...");
+          setTimeout(() => {
+            navigate("/verifyotp");
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error("Error fetching data: ", error);
+          HandleError(error.response.data.message);
+        });
+    } catch (err) {
+      console.error("Error submitting form: ", err);
+    }
   }
 
   return (
@@ -124,6 +146,7 @@ export function SignupForm({ className, ...props }) {
           </div>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 }
